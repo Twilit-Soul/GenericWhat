@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 import effects.Effect;
 import mainRunner.GameManager;
 import abilities.Ability;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -27,7 +26,6 @@ import userInterface.vBoxes.ChooseEffectAttributes;
 public class EffectList extends TitledListWithButtons {
 
 	private String nameToCheck = "";
-	private long lastSortedBottom = 0;
 	private Ability ability;
 	
 	
@@ -42,7 +40,9 @@ public class EffectList extends TitledListWithButtons {
 		// List of Effects (will be, anyway)
 		ListView<Effect> list = new ListView<>();
 
-		FilteredList<Effect> filteredEffectList = GameManager.getEffectList().filtered(p -> true);
+		ObservableList<Effect> allEffectsList = GameManager.getEffectList();
+		
+		FilteredList<Effect> filteredEffectList = allEffectsList.filtered(p -> true);
 
 		list.setItems(filteredEffectList);
 		
@@ -102,6 +102,8 @@ public class EffectList extends TitledListWithButtons {
 				ability.removeEffect(effect);
 				filteredEffectList.setPredicate(getPredicateTopList());
 				filteredAbilityEffectList.setPredicate(getPredicateBottomList());
+				Collections.sort(abilityEffectsObsvList);
+				Collections.sort(allEffectsList);
 			}
 		});
 
@@ -109,16 +111,11 @@ public class EffectList extends TitledListWithButtons {
 			Effect effect = list.getSelectionModel().getSelectedItem();
 			if (effect != null) {
 				ability.addEffect(effect);
+				//Copy paste is gross. I feel shame. I'm still lazy.
 				filteredEffectList.setPredicate(getPredicateTopList());
 				filteredAbilityEffectList.setPredicate(getPredicateBottomList());
-			}
-		});
-		
-		abilityEffectsObsvList.addListener((ListChangeListener<Effect>) change -> {
-			long curTime = System.currentTimeMillis();
-			if (curTime - lastSortedBottom > 100) {
-				lastSortedBottom = curTime;
 				Collections.sort(abilityEffectsObsvList);
+				Collections.sort(allEffectsList);
 			}
 		});
 		

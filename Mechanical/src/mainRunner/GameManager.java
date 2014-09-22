@@ -9,7 +9,6 @@ import abilities.Ability;
 import userInterface.SceneMaker;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
@@ -20,8 +19,6 @@ public class GameManager extends Application {
 	private static HashMap<String, Effect> effectMap = new HashMap<>(100,1);
 	private static ObservableList<Ability> abilityList = FXCollections.observableArrayList();
 	private static ObservableList<Effect> effectList = FXCollections.observableArrayList();
-	private long lastSortedEffect = 0;
-	private long lastSortedArray = 0;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -30,24 +27,6 @@ public class GameManager extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		SceneMaker.setStartScreenAndSetUpStage(stage);
-		setUpAutoSorts();
-	}
-	
-	private void setUpAutoSorts() {
-		effectList.addListener((ListChangeListener<Effect>) change -> {
-			long curTime = System.currentTimeMillis();
-			if (curTime - lastSortedEffect > 100) {
-				lastSortedEffect = curTime;
-				Collections.sort(effectList);
-			}
-		});
-		abilityList.addListener((ListChangeListener<Ability>) change -> {
-			long curTime = System.currentTimeMillis();
-			if (curTime - lastSortedArray > 100) {
-				lastSortedArray = curTime;
-				Collections.sort(abilityList);
-			}
-		});
 	}
 	
 	public static int getWindowWidth() {
@@ -67,6 +46,7 @@ public class GameManager extends Application {
 		if (!abilityMap.containsKey(abilityName)) {
 			abilityMap.put(abilityName, ability);
 			abilityList.add(ability);
+			Collections.sort(abilityList);
 		} else {
 			throw new NameTakenException("Already have ability with name: "+ability);
 		}
@@ -95,6 +75,7 @@ public class GameManager extends Application {
 		if (!effectMap.containsKey(effectName)) {
 			effectMap.put(effectName, effect);
 			effectList.add(effect);
+			Collections.sort(effectList);
 		} else {
 			throw new NameTakenException("Already have effect with name: "+effect);
 		}
