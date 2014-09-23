@@ -5,19 +5,15 @@ import userInterface.flowPanes.EffectFilter;
 import userInterface.vBoxes.titledListBoxes.EffectList;
 import javafx.scene.layout.BorderPane;
 
+/**
+ * Contains the effect list and the effect filters.
+ * @author Mitchell
+ */
 public class ManageEffectsPane extends BorderPane {
 	
-	EffectList effectList;
-	EffectFilter effectFilter;
-	Ability ability;
-	 
 	public ManageEffectsPane(Ability ability) {
-		this.ability = ability;
-		effectList = new EffectList(ability);
-		effectFilter = new EffectFilter(ability);
-		
-		this.setLeft(effectList);
-		this.setCenter(effectFilter);
+		this.setLeft(new EffectList(ability));
+		this.setCenter(new EffectFilter());
 	}
 	
 }

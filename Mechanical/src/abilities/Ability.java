@@ -15,6 +15,9 @@ public class Ability implements Comparable<Ability> {
 		this(name, null);
 	}
 	
+	/**
+	 * @param toCopy This ability is copied.
+	 */
 	public Ability(String name, Ability toCopy) {
 		this.name = name;
 		if (toCopy != null) {
@@ -47,6 +50,8 @@ public class Ability implements Comparable<Ability> {
 	public void addEffect(Effect effect) {
 		if (!effects.contains(effect)) {
 			effects.add(effect);
+		} else {
+			//TODO: Throw an exception? I guess
 		}
 	}
 	
@@ -66,6 +71,9 @@ public class Ability implements Comparable<Ability> {
 		this.name = name;
 	}
 
+	/**
+	 * For sorting.
+	 */
 	@Override
 	public int compareTo(Ability o) {
 		return name.compareTo(o.getName());

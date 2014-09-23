@@ -5,8 +5,15 @@ import userInterface.vBoxes.titledCheckBoxes.TitledCheckBoxes;
 import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
 
+/**
+ * This contains all of the checkbox sections for filtering abilities.
+ * @author Mitchell
+ */
 public class AbilityFilter extends FlowPane {
 	
+	/**
+	 * Makes all the checkboxes for filtering abilities.
+	 */
 	public AbilityFilter() {
 		this.setPrefWrapLength(GameManager.getWindowWidth() * 0.8);
 		this.setPadding(new Insets(15,15,15,20));

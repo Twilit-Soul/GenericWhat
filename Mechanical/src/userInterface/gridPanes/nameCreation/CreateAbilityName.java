@@ -9,13 +9,26 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 
+/**
+ * Starting point of ability creation.
+ * @author Mitchell
+ */
 public class CreateAbilityName extends CreateName {
 
+	/**
+	 * For creating a new ability.
+	 * @param tab The tab name/content is changed in the creation process.
+	 */
 	public CreateAbilityName(Tab tab) {
 		this(tab, null);
 	}
 	
-	public CreateAbilityName(Tab tab, Ability ability) {
+	/**
+	 * For creating an ability from a template.
+	 * @param tab The tab name/content is changed in the creation process.
+	 * @param templateAbility This is the ability we're using as a basis.
+	 */
+	public CreateAbilityName(Tab tab, Ability templateAbility) {
 		super(tab);
 		
 		nameBox.getChildren().add(0, new Label("Ability Name: "));
@@ -25,7 +38,7 @@ public class CreateAbilityName extends CreateName {
 			String nameToUse = nameField.getText();
 			if (!nameToUse.isEmpty()) {
 				tab.setText("Ability:"+nameToUse);
-				Ability newAbility = new Ability(nameToUse, ability);
+				Ability newAbility = new Ability(nameToUse, templateAbility);
 				try {
 					GameManager.addAbility(newAbility);
 					tab.setContent(new ManageEffectsPane(newAbility));

@@ -18,17 +18,23 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import userInterface.SceneMaker;
+import userInterface.SceneManager;
 import userInterface.gridPanes.nameCreation.CreateEffectName;
-import userInterface.tabs.EffectTab;
 import userInterface.vBoxes.ChooseEffectAttributes;
 
+/**
+ * Creates the two lists for adding an effect to an ability.
+ * @author Mitchell
+ */
 public class EffectList extends TitledListWithButtons {
 
 	private String nameToCheck = "";
 	private Ability ability;
 	
-	
+	/**
+	 * Creates the two lists for adding an effect to an ability.
+	 * @param pAbility The ability this is done for.
+	 */
 	public EffectList(Ability pAbility) {
 		super();
 		ability = pAbility;
@@ -48,7 +54,7 @@ public class EffectList extends TitledListWithButtons {
 		
 		list.setOnMouseClicked(event -> {
 			if (event.getClickCount() == 2) {
-				makeEditAbilityTab(list, ability);
+				makeEditEffectTab(list);
 			}
 		});
 		
@@ -82,7 +88,7 @@ public class EffectList extends TitledListWithButtons {
 		
 		abilityEffectList.setOnMouseClicked(event -> {
 			if (event.getClickCount() == 2) {
-				makeEditAbilityTab(abilityEffectList, ability);
+				makeEditEffectTab(abilityEffectList);
 			}
 		});
 		
@@ -126,22 +132,22 @@ public class EffectList extends TitledListWithButtons {
 		Button makeNewAbilityOrEffectButton = new Button("Make New Effect");
 
 		makeNewAbilityOrEffectButton.setOnAction((ActionEvent e) -> {
-			EffectTab newEffectTab = new EffectTab("newEffect00");
+			Tab newEffectTab = new Tab("newEffect00");
 
 			newEffectTab
-					.setContent(new CreateEffectName(newEffectTab, ability));
-			TabPane tabPane = SceneMaker.getTabPane();
+					.setContent(new CreateEffectName(newEffectTab));
+			TabPane tabPane = SceneManager.getTabPane();
 			tabPane.getTabs().add(newEffectTab);
 			tabPane.getSelectionModel().select(newEffectTab);
 		});
 		
 		templateButton.setOnAction(event -> {
-			EffectTab newEffectTab = new EffectTab("newEffect00");
+			Tab newEffectTab = new Tab("newEffect00");
 			Effect templateEffect = list.getSelectionModel().getSelectedItem();
 
 			newEffectTab
-					.setContent(new CreateEffectName(newEffectTab, ability, templateEffect));
-			TabPane tabPane = SceneMaker.getTabPane();
+					.setContent(new CreateEffectName(newEffectTab, templateEffect));
+			TabPane tabPane = SceneManager.getTabPane();
 			tabPane.getTabs().add(newEffectTab);
 			tabPane.getSelectionModel().select(newEffectTab);
 		});
@@ -161,11 +167,17 @@ public class EffectList extends TitledListWithButtons {
 		});
 	}
 	
-	private void makeEditAbilityTab(ListView<Effect> listView, Ability ability) {
+	/**
+	 * Makes a tab to modify an ability if necessary.
+	 * If it's not necessary, just switches to the already open tab.
+	 * @param listView Uses this to get the currently selected item.
+	 */
+	private void makeEditEffectTab(ListView<Effect> listView) {
+		//TODO: Need to instead work with the most recently used list...or something.
 		Effect toModify = listView.getSelectionModel().getSelectedItem();
 		String effectName = toModify.getName();
 
-		TabPane tabPane = SceneMaker.getTabPane();
+		TabPane tabPane = SceneManager.getTabPane();
 		ObservableList<Tab> tabs = tabPane.getTabs();
 
 		boolean needToMake = true;
@@ -176,15 +188,19 @@ public class EffectList extends TitledListWithButtons {
 				break;
 			}
 		}
+		
 		if (needToMake) {
 			Tab editAbilityTab = new Tab("Effect:" + effectName);
 			editAbilityTab.setContent(new ChooseEffectAttributes(
-					editAbilityTab, toModify, ability));
+					editAbilityTab, toModify));
 			tabPane.getTabs().add(editAbilityTab);
 			tabPane.getSelectionModel().select(editAbilityTab);
 		}
 	}
 	
+	/**
+	 * Filter the top list by name and whether or not the ability we're managing has the effect.
+	 */
 	private Predicate<Effect> getPredicateTopList() {
 		if (!nameToCheck.isEmpty()) {
 			return p -> p.getName().startsWith(nameToCheck) && !ability.getEffects().contains(p);
@@ -193,6 +209,9 @@ public class EffectList extends TitledListWithButtons {
 		}
 	}
 	
+	/**
+	 * Filter the bottom list by name.
+	 */
 	private Predicate<Effect> getPredicateBottomList() {
 		if (!nameToCheck.isEmpty()) {
 			return p -> p.getName().startsWith(nameToCheck);

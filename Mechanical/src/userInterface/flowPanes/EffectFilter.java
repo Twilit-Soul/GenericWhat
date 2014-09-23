@@ -1,15 +1,20 @@
 package userInterface.flowPanes;
 
-import abilities.Ability;
 import mainRunner.GameManager;
 import userInterface.vBoxes.titledCheckBoxes.TitledCheckBoxes;
 import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
 
+/**
+ * This contains all of the checkbox sections for filtering effects in an ability.
+ * @author Mitchell
+ */
 public class EffectFilter extends FlowPane {
-	Ability ability;
 	
-	public EffectFilter(Ability ability) {
+	/**
+	 * Makes all the checkboxes for filtering effects.
+	 */
+	public EffectFilter() {
 		this.setPrefWrapLength(GameManager.getWindowWidth() * 0.8);
 		this.setPadding(new Insets(15,15,15,20));
 		this.setHgap(30);

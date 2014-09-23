@@ -8,6 +8,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * Basis for CreateAbilityName and CreateEffectName.
+ * @author Mitchell
+ *
+ */
 public abstract class CreateName extends GridPane {
 
 	protected Tab tab;
@@ -16,6 +21,9 @@ public abstract class CreateName extends GridPane {
 	protected TextField nameField;
 	protected Label nameTakenLabel;
 	
+	/**
+	 * Needs the tab to reference it in child classes.
+	 */
 	public CreateName(Tab pTab) {
 		tab = pTab;
 		

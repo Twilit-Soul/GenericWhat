@@ -1,6 +1,6 @@
 package userInterface.vBoxes.titledCheckBoxes;
 
-import userInterface.SceneMaker;
+import userInterface.SceneManager;
 import mainRunner.GameManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -12,8 +12,18 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * Create a titled section of checkboxes with a border.
+ * @author Mitchell
+ */
 public class TitledCheckBoxes extends VBox {
 
+	/**
+	 * @param hasTextField Considering including text box here to further filter something like,
+	 * for "X turns", the number of turns.
+	 * @param sectionTitle Title of section.
+	 * @param labels Label for each checkbox.
+	 */
 	public TitledCheckBoxes(boolean hasTextField,
 			String sectionTitle, String... labels) {
 		//Section Container
@@ -31,7 +41,7 @@ public class TitledCheckBoxes extends VBox {
 		sectionTitleBox.getChildren().add(sectionTitleLabel);
 		//If input field, add it along with combo box
 		if (hasTextField) {
-			sectionTitleBox.getChildren().add(SceneMaker.getOperatorsBox());
+			sectionTitleBox.getChildren().add(SceneManager.getOperatorsBox());
 			TextField textField = new TextField();
 			textField.setMaxWidth(80);
 			sectionTitleBox.getChildren().add(textField);
@@ -44,7 +54,7 @@ public class TitledCheckBoxes extends VBox {
 		checkBoxesFlowPane.setHgap(25);
 		checkBoxesFlowPane.setVgap(15);
 		checkBoxesFlowPane.setPadding(new Insets(9,9,-9,9));
-		checkBoxesFlowPane.setStyle(SceneMaker.ROUND_BLACK_BORDER);
+		checkBoxesFlowPane.setStyle(SceneManager.ROUND_BLACK_BORDER);
 		//Check boxes
 		for (String label: labels) {
 			checkBoxesFlowPane.getChildren().add(new CheckBox(label));

@@ -14,10 +14,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import userInterface.SceneMaker;
+import userInterface.SceneManager;
 import userInterface.gridPanes.nameCreation.CreateAbilityName;
 import userInterface.borderPanes.ManageEffectsPane;
 
+/**
+ * The list for managing all abilities in the game.
+ * @author Mitchell
+ */
 public class AbilityList extends TitledListWithButtons {
 
 	private Predicate<Ability> predicate = null;
@@ -44,7 +48,7 @@ public class AbilityList extends TitledListWithButtons {
 				Ability toModify = list.getSelectionModel().getSelectedItem();
 				String abilityName = toModify.getName();
 				
-				TabPane tabPane = SceneMaker.getTabPane();
+				TabPane tabPane = SceneManager.getTabPane();
 				ObservableList<Tab> tabs = tabPane.getTabs();
 				
 				boolean needToMake = true;
@@ -75,7 +79,7 @@ public class AbilityList extends TitledListWithButtons {
 			Tab newAbilityTab = new Tab("newAbility00");
 			
 			newAbilityTab.setContent(new CreateAbilityName(newAbilityTab));
-			TabPane tabPane = SceneMaker.getTabPane();
+			TabPane tabPane = SceneManager.getTabPane();
 			tabPane.getTabs().add(newAbilityTab);
 			tabPane.getSelectionModel().select(newAbilityTab);
 		});
@@ -84,7 +88,7 @@ public class AbilityList extends TitledListWithButtons {
 			Tab newAbilityTab = new Tab("newAbility00");
 			Ability templateAbility = list.getSelectionModel().getSelectedItem();
 			newAbilityTab.setContent(new CreateAbilityName(newAbilityTab, templateAbility));
-			TabPane tabPane = SceneMaker.getTabPane();
+			TabPane tabPane = SceneManager.getTabPane();
 			tabPane.getTabs().add(newAbilityTab);
 			tabPane.getSelectionModel().select(newAbilityTab);
 		});
@@ -102,6 +106,9 @@ public class AbilityList extends TitledListWithButtons {
 		
 	}
 	
+	/**
+	 * Filter the list by name.
+	 */
 	private void updatePredicate() {
 		if (!nameToCheck.isEmpty()) {
 			predicate = p -> p.getName().startsWith(nameToCheck);

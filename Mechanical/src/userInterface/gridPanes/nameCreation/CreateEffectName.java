@@ -1,20 +1,32 @@
 package userInterface.gridPanes.nameCreation;
 
 import mainRunner.GameManager;
-import abilities.Ability;
 import effects.Effect;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
-import userInterface.tabs.EffectTab;
+import javafx.scene.control.Tab;
 import userInterface.vBoxes.ChooseEffectAttributes;
 
+/**
+ * Starting point of effect creation.
+ * @author Mitchell
+ */
 public class CreateEffectName extends CreateName {
 
-	public CreateEffectName(EffectTab tab, Ability ability) {
-		this(tab,ability,null);
+	/**
+	 * For creating a new effect.
+	 * @param tab The tab name/content is changed in the creation process.
+	 */
+	public CreateEffectName(Tab tab) {
+		this(tab,null);
 	}
 
-	public CreateEffectName(EffectTab tab, Ability ability, Effect templateEffect) {
+	/**
+	 * For creating an effect from a template.
+	 * @param tab The tab name/content is changed in the creation process.
+	 * @param templateEffect This is the effect we're using as a basis.
+	 */
+	public CreateEffectName(Tab tab, Effect templateEffect) {
 		super(tab);
 
 		Button nameButton = new Button("Next");
@@ -24,7 +36,7 @@ public class CreateEffectName extends CreateName {
 				Effect newEffect = new Effect(nameToUse, templateEffect);
 				if (GameManager.getEffect(nameToUse) == null) {
 					tab.setText("Effect:"+nameToUse);
-					tab.setContent(new ChooseEffectAttributes(tab, newEffect, ability));
+					tab.setContent(new ChooseEffectAttributes(tab, newEffect));
 				} else {
 					nameTakenLabel.setVisible(true);
 				}

@@ -8,6 +8,10 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * This is the basis of AbilityList and EffectList.
+ * @author Mitchell
+ */
 public abstract class TitledListWithButtons extends VBox {
 	
 	protected FlowPane buttonBox;
@@ -43,10 +47,17 @@ public abstract class TitledListWithButtons extends VBox {
 		this.getChildren().add(buttonBox);
 	}
 	
+	/**
+	 * Add the name filter without caring for its location.
+	 */
 	protected void addNameFilter() {
 		addNameFilter(-1);
 	}
 	
+	/**
+	 * Add the name filter with a specified location in the vbox.
+	 * @param index
+	 */
 	protected void addNameFilter(int index) {
 		
 		//HBox for label and filter text

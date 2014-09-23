@@ -34,6 +34,9 @@ public class Effect implements Comparable<Effect> {
 		this(name,null);
 	}
 	
+	/**
+	 * @param toCopy The effect passed in is copied.
+	 */
 	public Effect(String name, Effect toCopy) {
 		this.name = name;
 		if (toCopy != null) {
@@ -170,6 +173,12 @@ public class Effect implements Comparable<Effect> {
 		this.powerSourceAttribute = powerSourceAttribute;
 	}
 
+	/**
+	 * I don't think this is still used.
+	 * I don't know if this was ever a good idea.
+	 * @param toUse The class of the attribute we're setting.
+	 * @param choiceText The string value of the assignment.
+	 */
 	public void setAttribute(Class<?> toUse, String choiceText) {
 		if (toUse == EffectPowerSourceAttribute.class) {
 			powerSourceAttribute = EffectPowerSourceAttribute.fromString(choiceText);
@@ -194,6 +203,9 @@ public class Effect implements Comparable<Effect> {
 		}
 	}
 	
+	/**
+	 * Checks (or will check) to see if anything is null.
+	 */
 	public boolean isFullyConstructed() {
 		return affectsWho != null &&
 				durationType != null &&
@@ -206,6 +218,9 @@ public class Effect implements Comparable<Effect> {
 				powerSourceAttribute != null;
 	}
 
+	/**
+	 * For sorting.
+	 */
 	@Override
 	public int compareTo(Effect o) {
 		return name.compareTo(o.getName());

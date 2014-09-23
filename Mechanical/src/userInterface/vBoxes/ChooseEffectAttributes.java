@@ -2,7 +2,6 @@ package userInterface.vBoxes;
 
 import java.util.List;
 
-import abilities.Ability;
 import mainRunner.GameManager;
 import mainRunner.GameManager.NameTakenException;
 import userInterface.vBoxes.titledRadioButtons.TitledRadioButtons;
@@ -25,13 +24,22 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * This has two parts:
+ * The top half, which is a flowpane containing all of the Effect attributes decisions.
+ * The bottom half, which is just an "I'm done" button and a "no you're not" message.
+ * @author Mitchell
+ */
 public class ChooseEffectAttributes extends VBox {
 	Effect effect;
 	
-	public ChooseEffectAttributes(Tab tab, Effect newEffect, Ability ability) {
+	/**
+	 * @param tab When finished, needs this to close its own tab.
+	 * @param newEffect This is the effect we're choosing the attributes of.
+	 */
+	public ChooseEffectAttributes(Tab tab, Effect newEffect) {
 		this.effect = newEffect;
 		
-		//Contains everything
 		this.setSpacing(15);
 		this.setAlignment(Pos.CENTER);
 		
@@ -42,7 +50,7 @@ public class ChooseEffectAttributes extends VBox {
 		choicesFlowPane.setVgap(10);
 		choicesFlowPane.setPrefWidth(GameManager.getWindowWidth() * 0.8);
 		
-		//For each section
+		//For each section to reference
 		double boxHeight = 200;
 		double boxWidth = 130;
 		
@@ -59,15 +67,23 @@ public class ChooseEffectAttributes extends VBox {
 		TitledRadioButtons statusTypeButtons = new TitledRadioButtons("Status Type", "", boxHeight, boxWidth, EffectStatusType.stringValues());
 		TitledRadioButtons affectsWhatButtons = new TitledRadioButtons("Affects What", "", boxHeight, boxWidth, EffectAffectsWhat.stringValues());
 		
+		//I'll try to break this down...
 		
 		choicesFlowPane.getChildren().add(affectsWhoButtons);
 		radioButtons = affectsWhoButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
+			//Each radio button section will have something like this,
+			//where we select this option if the effect already has this defined.
+			//(This means we're working from a template)
 			String buttonText = button.getText();
 			EffectAffectsWho effectHas = effect.getAffectsWho();
 			if (effectHas != null && buttonText.equals(effectHas.toString())) {
 				button.setSelected(true);
 			}
+			//This radio button section in particular has to deal with
+			//the compatibility of 'self' and other options.
+			//Particularly, if you haven't chosen 'self', we limit
+			//when the effect can take...er, effect.
 			button.setOnAction((ActionEvent e) -> {
 				//Set Effect attribute to match button
 				effect.setAffectsWho(EffectAffectsWho.fromString(buttonText));
@@ -93,6 +109,8 @@ public class ChooseEffectAttributes extends VBox {
 				}
 			});
 		}
+		
+		
 		choicesFlowPane.getChildren().add(affectsWhatButtons);
 		radioButtons = affectsWhatButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
@@ -105,6 +123,8 @@ public class ChooseEffectAttributes extends VBox {
 				effect.setAffectsWhat(EffectAffectsWhat.fromString(buttonText));
 			});
 		}
+		
+		
 		choicesFlowPane.getChildren().add(statusTypeButtons);
 		radioButtons = statusTypeButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
@@ -117,6 +137,8 @@ public class ChooseEffectAttributes extends VBox {
 				effect.setStatusType(EffectStatusType.fromString(buttonText));
 			});
 		}
+		
+		
 		choicesFlowPane.getChildren().add(powerSourceButtons);
 		radioButtons = powerSourceButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
@@ -129,6 +151,8 @@ public class ChooseEffectAttributes extends VBox {
 				effect.setPowerSource(EffectPowerSource.fromString(buttonText));
 			});
 		}
+		
+		
 		choicesFlowPane.getChildren().add(powerSourceAttributeButtons);
 		radioButtons = powerSourceAttributeButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
@@ -141,6 +165,8 @@ public class ChooseEffectAttributes extends VBox {
 				effect.setPowerSourceAttribute(EffectPowerSourceAttribute.fromString(buttonText));
 			});
 		}
+		
+		
 		choicesFlowPane.getChildren().add(happensWhenButtons);
 		radioButtons = happensWhenButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
@@ -153,6 +179,8 @@ public class ChooseEffectAttributes extends VBox {
 				effect.setWhen(EffectWhen.fromString(buttonText));
 			});
 		}
+		
+		
 		choicesFlowPane.getChildren().add(durationTypeButtons);
 		radioButtons = durationTypeButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
@@ -165,6 +193,8 @@ public class ChooseEffectAttributes extends VBox {
 				effect.setDurationType(EffectDurationType.fromString(buttonText));
 			});
 		}
+		
+		
 		choicesFlowPane.getChildren().add(requiresWhatButtons);
 		radioButtons = requiresWhatButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
@@ -177,6 +207,8 @@ public class ChooseEffectAttributes extends VBox {
 				effect.setRequiresWhat(EffectRequiresWhat.fromString(buttonText));
 			});
 		}
+		
+		
 		choicesFlowPane.getChildren().add(numberTypeButtons);
 		radioButtons = numberTypeButtons.getRadioButtons();
 		for (RadioButton button : radioButtons) {
@@ -190,13 +222,13 @@ public class ChooseEffectAttributes extends VBox {
 			});
 		}
 		
-		//Add sections to overall
+		//Add radio sections to overall container
 		this.getChildren().add(choicesFlowPane);
 		
 		Button confirmButton = new Button("Confirm");
 		this.getChildren().add(confirmButton);
 		
-		//Starts out hidden
+		//Starts out hidden, this is to show errors
 		Label errorLabel = new Label();
 		errorLabel.setVisible(false);
 		
@@ -204,11 +236,15 @@ public class ChooseEffectAttributes extends VBox {
 		
 		confirmButton.setOnAction((ActionEvent e) -> {
 			if (effect.isFullyConstructed()) {
+				//This be how you close a tab.
 				tab.getTabPane().getTabs().remove(tab);
 				try {
+					//If it's a new effect, then...
 					GameManager.addEffect(effect);
+					//..it's ALIVE! IT'S ALIIIIVE!
 				} catch (NameTakenException e1) {
 					//This means we're just modifying the effect so don't need to add it again.
+					//(So who cares about your error? SUCK IT)
 				}
 			} else {
 				errorLabel.setText("You forgot a setting.");
