@@ -52,10 +52,18 @@ public class GameManager extends Application {
 		if (!abilityMap.containsKey(abilityName)) {
 			abilityMap.put(abilityName, ability);
 			abilityList.add(ability);
-			Collections.sort(abilityList);
+			sortAbilityList();
 		} else {
 			throw new NameTakenException("Already have ability with name: "+ability);
 		}
+	}
+	
+	/**
+	 * This mostly exists to update the list in case of things such as changing the name of an ability.
+	 * Without doing this, the name change isn't even reflected in the list.
+	 */
+	public static void sortAbilityList() {
+		Collections.sort(abilityList);
 	}
 	
 	/**
@@ -95,6 +103,14 @@ public class GameManager extends Application {
 		} else {
 			throw new NameTakenException("Already have effect with name: "+effect);
 		}
+	}
+	
+	/**
+	 * This mostly exists to update the list in case of things such as changing the name of an effect.
+	 * Without doing this, the name change isn't even reflected in the list.
+	 */
+	public static void sortEffectList() {
+		Collections.sort(effectList);
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 package userInterface;
 
+import effects.Effect;
+import abilities.Ability;
 import userInterface.scenes.sceneTypes.MenuScene;
 import mainRunner.GameManager;
 import javafx.event.ActionEvent;
@@ -96,4 +98,11 @@ public class SceneManager {
 		stage.setTitle(newTitle);
 	}
 
+	public static String abilityTabTitle(Ability ability) {
+		return "Ability: "+ability;
+	}
+	
+	public static String effectTabTitle(Effect effect) {
+		return "Effect: "+effect;
+	}
 }

@@ -5,12 +5,14 @@ import effects.Effect;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
+import userInterface.SceneManager;
 import userInterface.vBoxes.ChooseEffectAttributes;
 
 /**
  * Starting point of effect creation.
  * @author Mitchell
  */
+@Deprecated
 public class CreateEffectName extends CreateName {
 
 	/**
@@ -35,7 +37,7 @@ public class CreateEffectName extends CreateName {
 			if (!nameToUse.isEmpty()) {
 				Effect newEffect = new Effect(nameToUse, templateEffect);
 				if (GameManager.getEffect(nameToUse) == null) {
-					tab.setText("Effect:"+nameToUse);
+					tab.setText(SceneManager.effectTabTitle(newEffect));
 					tab.setContent(new ChooseEffectAttributes(tab, newEffect));
 				} else {
 					nameTakenLabel.setVisible(true);

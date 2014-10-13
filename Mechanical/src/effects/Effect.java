@@ -30,15 +30,25 @@ public class Effect implements Comparable<Effect> {
 	private int duration;
 	private int successRate = 100; // default chance is always works
 
+	public Effect() {
+		this(null,null);
+	}
+	
 	public Effect(String name) {
 		this(name,null);
+	}
+	
+	public Effect(Effect toCopy) {
+		this(null,toCopy);
 	}
 	
 	/**
 	 * @param toCopy The effect passed in is copied.
 	 */
 	public Effect(String name, Effect toCopy) {
-		this.name = name;
+		if (name != null) {
+			this.name = name;
+		}
 		if (toCopy != null) {
 			this.affectsWho = toCopy.affectsWho;
 			this.durationType = toCopy.durationType;
@@ -215,7 +225,8 @@ public class Effect implements Comparable<Effect> {
 				affectsWhat != null &&
 				requiresWhat != null &&
 				powerSource != null &&
-				powerSourceAttribute != null;
+				powerSourceAttribute != null &&
+				name != null;
 	}
 
 	/**

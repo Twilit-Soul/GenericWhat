@@ -2,6 +2,7 @@ package userInterface.gridPanes.nameCreation;
 
 import mainRunner.GameManager;
 import mainRunner.GameManager.NameTakenException;
+import userInterface.SceneManager;
 import userInterface.borderPanes.ManageEffectsPane;
 import abilities.Ability;
 import javafx.event.ActionEvent;
@@ -37,8 +38,8 @@ public class CreateAbilityName extends CreateName {
 		nameButton.setOnAction((ActionEvent e) -> {
 			String nameToUse = nameField.getText();
 			if (!nameToUse.isEmpty()) {
-				tab.setText("Ability:"+nameToUse);
 				Ability newAbility = new Ability(nameToUse, templateAbility);
+				tab.setText(SceneManager.abilityTabTitle(newAbility));
 				try {
 					GameManager.addAbility(newAbility);
 					tab.setContent(new ManageEffectsPane(newAbility));

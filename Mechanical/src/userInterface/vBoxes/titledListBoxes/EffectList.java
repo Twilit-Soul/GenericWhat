@@ -19,7 +19,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import userInterface.SceneManager;
-import userInterface.gridPanes.nameCreation.CreateEffectName;
 import userInterface.vBoxes.ChooseEffectAttributes;
 
 /**
@@ -135,7 +134,7 @@ public class EffectList extends TitledListWithButtons {
 			Tab newEffectTab = new Tab("newEffect00");
 
 			newEffectTab
-					.setContent(new CreateEffectName(newEffectTab));
+					.setContent(new ChooseEffectAttributes(newEffectTab));
 			TabPane tabPane = SceneManager.getTabPane();
 			tabPane.getTabs().add(newEffectTab);
 			tabPane.getSelectionModel().select(newEffectTab);
@@ -146,7 +145,7 @@ public class EffectList extends TitledListWithButtons {
 			Effect templateEffect = list.getSelectionModel().getSelectedItem();
 
 			newEffectTab
-					.setContent(new CreateEffectName(newEffectTab, templateEffect));
+					.setContent(new ChooseEffectAttributes(newEffectTab, templateEffect));
 			TabPane tabPane = SceneManager.getTabPane();
 			tabPane.getTabs().add(newEffectTab);
 			tabPane.getSelectionModel().select(newEffectTab);

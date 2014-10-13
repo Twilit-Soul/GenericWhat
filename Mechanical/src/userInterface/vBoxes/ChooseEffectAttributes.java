@@ -4,6 +4,7 @@ import java.util.List;
 
 import mainRunner.GameManager;
 import mainRunner.GameManager.NameTakenException;
+import userInterface.SceneManager;
 import userInterface.vBoxes.titledRadioButtons.TitledRadioButtons;
 import effects.Effect;
 import effects.attributes.EffectAffectsWhat;
@@ -16,12 +17,15 @@ import effects.attributes.EffectStatusType;
 import effects.attributes.EffectWhen;
 import genericEnums.NumberType;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -31,17 +35,51 @@ import javafx.scene.layout.VBox;
  * @author Mitchell
  */
 public class ChooseEffectAttributes extends VBox {
-	Effect effect;
+	Effect effect = new Effect();
+	
+	public ChooseEffectAttributes(Tab tab) {
+		this(tab, null);
+	}
 	
 	/**
 	 * @param tab When finished, needs this to close its own tab.
 	 * @param newEffect This is the effect we're choosing the attributes of.
 	 */
-	public ChooseEffectAttributes(Tab tab, Effect newEffect) {
-		this.effect = newEffect;
+	public ChooseEffectAttributes(Tab tab, Effect templateEffect) {
+		if (templateEffect != null) {
+			effect = new Effect(templateEffect);
+		}
 		
 		this.setSpacing(15);
 		this.setAlignment(Pos.CENTER);
+		
+		//Name Effect Section//
+		
+		HBox nameEffectBox = new HBox();
+		nameEffectBox.setPadding(new Insets(0,0,0,20));
+		nameEffectBox.setSpacing(10);
+		nameEffectBox.setAlignment(Pos.CENTER);
+		
+		Label nameEffectLabel = new Label("Name Effect: ");
+		
+		TextField nameEffectField = new TextField();
+		
+		String effectName = effect.getName();
+		if (effectName != null) {
+			nameEffectField.setText(effectName);
+		}
+		nameEffectField.setOnAction(value -> {
+			String newName = nameEffectField.getText();
+			effect.setName(newName);
+			tab.setText(SceneManager.effectTabTitle(effect));
+		});
+		
+		nameEffectBox.getChildren().add(nameEffectLabel);
+		nameEffectBox.getChildren().add(nameEffectField);
+		
+		this.getChildren().add(nameEffectBox);
+				
+		//End Name Effect Section//
 		
 		//Contains radio button sections
 		FlowPane choicesFlowPane = new FlowPane();
