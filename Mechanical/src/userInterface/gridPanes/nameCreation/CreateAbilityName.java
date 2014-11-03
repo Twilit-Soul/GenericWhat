@@ -38,6 +38,7 @@ public class CreateAbilityName extends CreateName {
 		nameButton.setOnAction((ActionEvent e) -> {
 			String nameToUse = nameField.getText();
 			if (!nameToUse.isEmpty()) {
+				//Doesn't matter if templateAbility is null. Ability constructor says "whatever"
 				Ability newAbility = new Ability(nameToUse, templateAbility);
 				tab.setText(SceneManager.abilityTabTitle(newAbility));
 				try {

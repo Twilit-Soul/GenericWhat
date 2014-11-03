@@ -59,6 +59,28 @@ public class GameManager extends Application {
 	}
 	
 	/**
+	 * Returns if an ability exists already or not.
+	 * @param abilityName The name of the ability.
+	 */
+	public static boolean abilityExists(String abilityName) {
+		for (Ability ability: abilityList) {
+			if (ability.getName().equalsIgnoreCase(abilityName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean effectExists(String effectName) {
+		for (Effect effect: effectList) {
+			if (effect.getName().equalsIgnoreCase(effectName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * This mostly exists to update the list in case of things such as changing the name of an ability.
 	 * Without doing this, the name change isn't even reflected in the list.
 	 */

@@ -26,7 +26,7 @@ public class Ability implements Comparable<Ability> {
 			this.effects = FXCollections.observableArrayList(toCopy.getEffects());
 		}
 	}
-
+	
 	public NumberType getCostNumberType() {
 		return costNumberType;
 	}
@@ -50,6 +50,7 @@ public class Ability implements Comparable<Ability> {
 	public void addEffect(Effect effect) {
 		if (!effects.contains(effect)) {
 			effects.add(effect);
+			effect.addAbility(this);
 		} else {
 			//TODO: Throw an exception? I guess
 		}
@@ -57,6 +58,7 @@ public class Ability implements Comparable<Ability> {
 	
 	public void removeEffect(Effect effect) {
 		effects.remove(effect);
+		effect.removeAbility(this);
 	}
 
 	public String getName() {

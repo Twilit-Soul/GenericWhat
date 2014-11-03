@@ -34,16 +34,25 @@ public class ManageEffectsPane extends BorderPane {
 		Label renameAbilityLabel = new Label("Rename Ability: ");
 		
 		TextField renameAbilityField = new TextField();
-		renameAbilityField.setOnAction(value -> {
-			String newName = renameAbilityField.getText();
-			ability.setName(newName);
-			SceneManager.getTabPane().getSelectionModel().getSelectedItem().setText(SceneManager.abilityTabTitle(ability));
-			//Forces the list to update and re-sort
-			GameManager.sortAbilityList();
-		});
+		renameAbilityField.setText(ability.getName());
+		
+		Label nameTakenLabel = new Label("");
+		
+		renameAbilityField.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (!GameManager.abilityExists(newValue)) {
+				ability.setName(newValue);
+				SceneManager.getTabPane().getSelectionModel().getSelectedItem().setText(SceneManager.abilityTabTitle(ability));
+				//Forces the list to update and re-sort
+				GameManager.sortAbilityList();
+				nameTakenLabel.setText("");
+			} else {
+				nameTakenLabel.setText(newValue+" is taken already.");
+			}
+        });
 		
 		renameAbilityBox.getChildren().add(renameAbilityLabel);
 		renameAbilityBox.getChildren().add(renameAbilityField);
+		renameAbilityBox.getChildren().add(nameTakenLabel);
 		
 		filters.getChildren().add(renameAbilityBox);
 		

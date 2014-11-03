@@ -1,11 +1,13 @@
 package userInterface.vBoxes;
 
+import java.util.Collections;
 import java.util.List;
 
 import mainRunner.GameManager;
 import mainRunner.GameManager.NameTakenException;
 import userInterface.SceneManager;
 import userInterface.vBoxes.titledRadioButtons.TitledRadioButtons;
+import abilities.Ability;
 import effects.Effect;
 import effects.attributes.EffectAffectsWhat;
 import effects.attributes.EffectAffectsWho;
@@ -35,19 +37,25 @@ import javafx.scene.layout.VBox;
  * @author Mitchell
  */
 public class ChooseEffectAttributes extends VBox {
-	Effect effect = new Effect();
+	private Effect effect = new Effect();
+	private Label errorLabel = null;
 	
 	public ChooseEffectAttributes(Tab tab) {
 		this(tab, null);
 	}
 	
 	/**
-	 * @param tab When finished, needs this to close its own tab.
-	 * @param newEffect This is the effect we're choosing the attributes of.
+	 * @param tab
+	 *            When finished, needs this to close its own tab.
+	 * @param existingEffect
+	 *            This is the effect we're choosing the attributes of.
+	 * @param isModify
+	 *            True = modifying the effect passed in.
+	 *            False = using existingEffect as a template.
 	 */
-	public ChooseEffectAttributes(Tab tab, Effect templateEffect) {
-		if (templateEffect != null) {
-			effect = new Effect(templateEffect);
+	public ChooseEffectAttributes(Tab tab, Effect existingEffect) {
+		if (existingEffect != null) {
+			effect = existingEffect;
 		}
 		
 		this.setSpacing(15);
@@ -68,14 +76,27 @@ public class ChooseEffectAttributes extends VBox {
 		if (effectName != null) {
 			nameEffectField.setText(effectName);
 		}
-		nameEffectField.setOnAction(value -> {
-			String newName = nameEffectField.getText();
-			effect.setName(newName);
-			tab.setText(SceneManager.effectTabTitle(effect));
-		});
+		
+		Label nameTakenLabel = new Label("");
+		
+		nameEffectField.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (!GameManager.effectExists(newValue)) {
+				effect.setName(newValue);
+				tab.setText(SceneManager.effectTabTitle(effect));
+				nameTakenLabel.setText("");
+				GameManager.sortEffectList();
+				List<Ability> abilities = effect.getAbilities();
+				for (Ability ability: abilities) {
+					Collections.sort(ability.getEffects());
+				}
+			} else {
+				nameTakenLabel.setText(newValue+" is taken already.");
+			}
+        });
 		
 		nameEffectBox.getChildren().add(nameEffectLabel);
 		nameEffectBox.getChildren().add(nameEffectField);
+		nameEffectBox.getChildren().add(nameTakenLabel);
 		
 		this.getChildren().add(nameEffectBox);
 				
@@ -267,27 +288,45 @@ public class ChooseEffectAttributes extends VBox {
 		this.getChildren().add(confirmButton);
 		
 		//Starts out hidden, this is to show errors
-		Label errorLabel = new Label();
+		errorLabel = new Label();
 		errorLabel.setVisible(false);
 		
 		this.getChildren().add(errorLabel);
 		
 		confirmButton.setOnAction((ActionEvent e) -> {
-			if (effect.isFullyConstructed()) {
-				//This be how you close a tab.
-				tab.getTabPane().getTabs().remove(tab);
-				try {
-					//If it's a new effect, then...
-					GameManager.addEffect(effect);
-					//..it's ALIVE! IT'S ALIIIIVE!
-				} catch (NameTakenException e1) {
-					//This means we're just modifying the effect so don't need to add it again.
-					//(So who cares about your error? SUCK IT)
-				}
-			} else {
-				errorLabel.setText("You forgot a setting.");
-				errorLabel.setVisible(true);
+			advance(tab);
+		});
+		
+		nameEffectField.setOnAction(event -> {
+			advance(tab);
+		});
+		
+		tab.setOnCloseRequest(event -> {
+			if (!effect.isFullyConstructed()) {
+				event.consume();
+				showError("Can't close the tab. You forgot a setting.");
 			}
 		});
+	}
+	
+	private void showError(String message) {
+		errorLabel.setText(message);
+		errorLabel.setVisible(true);
+	}
+	
+	private void advance(Tab tab) {
+		if (effect.isFullyConstructed()) {
+			//This be how you close a tab.
+			tab.getTabPane().getTabs().remove(tab);
+			try {
+				//If it's a new effect, then...
+				GameManager.addEffect(effect);
+				//..it's ALIVE! IT'S ALIIIIVE!
+			} catch (NameTakenException e1) {
+				//Not new. We must be modifying. It's okay, shh
+			}
+		} else {
+			showError("You forgot a setting.");
+		}
 	}
 }

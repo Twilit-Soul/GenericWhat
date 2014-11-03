@@ -1,5 +1,9 @@
 package effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import abilities.Ability;
 import effects.attributes.EffectAffectsWhat;
 import effects.attributes.EffectAffectsWho;
 import effects.attributes.EffectDurationType;
@@ -29,6 +33,10 @@ public class Effect implements Comparable<Effect> {
 	private int power;
 	private int duration;
 	private int successRate = 100; // default chance is always works
+	/**
+	 * Abilities that use this effect.
+	 */
+	private List<Ability> abilities = new ArrayList<>(0);
 
 	public Effect() {
 		this(null,null);
@@ -64,6 +72,23 @@ public class Effect implements Comparable<Effect> {
 			this.duration = toCopy.duration;
 			this.successRate = toCopy.successRate;
 		}
+	}
+	
+	public void addAbility(Ability ability) {
+		if (!abilities.contains(ability)) {
+			abilities.add(ability);
+		}
+	}
+	
+	public void removeAbility(Ability ability) {
+		abilities.remove(ability);
+	}
+	
+	/**
+	 * These are the abilities that use this effect.
+	 */
+	public List<Ability> getAbilities() {
+		return abilities;
 	}
 
 	public void setWhen(EffectWhen whenHappens) {
@@ -226,7 +251,8 @@ public class Effect implements Comparable<Effect> {
 				requiresWhat != null &&
 				powerSource != null &&
 				powerSourceAttribute != null &&
-				name != null;
+				name != null &&
+				!name.isEmpty();
 	}
 
 	/**

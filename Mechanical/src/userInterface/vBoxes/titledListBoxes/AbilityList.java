@@ -51,15 +51,15 @@ public class AbilityList extends TitledListWithButtons {
 				TabPane tabPane = SceneManager.getTabPane();
 				ObservableList<Tab> tabs = tabPane.getTabs();
 				
-				boolean needToMake = true;
+				boolean needToMakeTab = true;
 				for (Tab tab: tabs) {
 					if (tab.getText().equals("Ability:"+abilityName)) {
-						needToMake = false;
+						needToMakeTab = false;
 						tabPane.getSelectionModel().select(tab);
 						break;
 					}
 				}
-				if (needToMake) {
+				if (needToMakeTab) {
 					Tab editAbilityTab = new Tab("Ability:"+abilityName);
 					editAbilityTab.setContent(new ManageEffectsPane(toModify));
 					tabPane.getTabs().add(editAbilityTab);
@@ -77,7 +77,6 @@ public class AbilityList extends TitledListWithButtons {
 		Button makeNewAbilityOrEffectButton = new Button("Make New Ability");
 		makeNewAbilityOrEffectButton.setOnAction((ActionEvent e) -> {
 			Tab newAbilityTab = new Tab("newAbility00");
-			
 			newAbilityTab.setContent(new CreateAbilityName(newAbilityTab));
 			TabPane tabPane = SceneManager.getTabPane();
 			tabPane.getTabs().add(newAbilityTab);
@@ -100,7 +99,6 @@ public class AbilityList extends TitledListWithButtons {
 		filterField.textProperty().addListener((observable, oldValue, newValue) -> {
 			nameToCheck = newValue;
 			updatePredicate();
-			
 			filteredList.setPredicate(predicate);
 		});
 		

@@ -29,6 +29,9 @@ public class EffectList extends TitledListWithButtons {
 
 	private String nameToCheck = "";
 	private Ability ability;
+	private boolean wasTopLast = false;
+	private ObservableList<Effect> allEffectsList = null;
+	private ObservableList<Effect> abilityEffectsObsvList = null;
 	
 	/**
 	 * Creates the two lists for adding an effect to an ability.
@@ -45,13 +48,14 @@ public class EffectList extends TitledListWithButtons {
 		// List of Effects (will be, anyway)
 		ListView<Effect> list = new ListView<>();
 
-		ObservableList<Effect> allEffectsList = GameManager.getEffectList();
+		allEffectsList = GameManager.getEffectList();
 		
 		FilteredList<Effect> filteredEffectList = allEffectsList.filtered(p -> true);
 
 		list.setItems(filteredEffectList);
 		
 		list.setOnMouseClicked(event -> {
+			wasTopLast = true;
 			if (event.getClickCount() == 2) {
 				makeEditEffectTab(list);
 			}
@@ -81,11 +85,12 @@ public class EffectList extends TitledListWithButtons {
 
 		ListView<Effect> abilityEffectList = new ListView<>();
 
-		ObservableList<Effect> abilityEffectsObsvList = ability.getEffects();
+		abilityEffectsObsvList = ability.getEffects();
 		
 		FilteredList<Effect> filteredAbilityEffectList = abilityEffectsObsvList.filtered(p -> true);
 		
 		abilityEffectList.setOnMouseClicked(event -> {
+			wasTopLast = false;
 			if (event.getClickCount() == 2) {
 				makeEditEffectTab(abilityEffectList);
 			}
@@ -142,10 +147,12 @@ public class EffectList extends TitledListWithButtons {
 		
 		templateButton.setOnAction(event -> {
 			Tab newEffectTab = new Tab("newEffect00");
-			Effect templateEffect = list.getSelectionModel().getSelectedItem();
+			Effect templateEffect = wasTopLast ? list.getSelectionModel()
+					.getSelectedItem() : abilityEffectList.getSelectionModel()
+					.getSelectedItem();
 
 			newEffectTab
-					.setContent(new ChooseEffectAttributes(newEffectTab, templateEffect));
+					.setContent(new ChooseEffectAttributes(newEffectTab, new Effect(templateEffect)));
 			TabPane tabPane = SceneManager.getTabPane();
 			tabPane.getTabs().add(newEffectTab);
 			tabPane.getSelectionModel().select(newEffectTab);
@@ -166,13 +173,17 @@ public class EffectList extends TitledListWithButtons {
 		});
 	}
 	
+	public void refreshLists() {
+		Collections.sort(allEffectsList);
+		Collections.sort(abilityEffectsObsvList);
+	}
+	
 	/**
 	 * Makes a tab to modify an ability if necessary.
 	 * If it's not necessary, just switches to the already open tab.
 	 * @param listView Uses this to get the currently selected item.
 	 */
 	private void makeEditEffectTab(ListView<Effect> listView) {
-		//TODO: Need to instead work with the most recently used list...or something.
 		Effect toModify = listView.getSelectionModel().getSelectedItem();
 		String effectName = toModify.getName();
 
